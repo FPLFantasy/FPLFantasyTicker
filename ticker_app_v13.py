@@ -1,3 +1,8 @@
+import streamlit as st
+
+if __name__ == "__main__":
+    st.set_page_config(page_title="FPL Ticker", layout="wide")
+
 # ticker_app_v13.py
 # v13: improvements over v9
 # - Automatically uses mounted volume at /data if present (no env var required)
@@ -474,3 +479,4 @@ st.markdown("""
 - The excluded GW **remains visible** in the Fixture Grid but is greyed out to show it was excluded.
 - Only **one** GW can be excluded at a time for now.
 """)
+

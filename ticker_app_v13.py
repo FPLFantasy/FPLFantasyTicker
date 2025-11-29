@@ -1,8 +1,3 @@
-import streamlit as st
-
-if __name__ == "__main__":
-    st.set_page_config(page_title="FPL Ticker", layout="wide")
-
 # ticker_app_v13.py
 # v13: improvements over v9
 # - Automatically uses mounted volume at /data if present (no env var required)
@@ -19,6 +14,16 @@ import requests
 import tempfile
 from matplotlib import cm, colors
 from typing import Tuple, Dict, List
+
+import streamlit as st
+
+if __name__ == "__main__":
+    st.set_page_config(page_title="FPL Ticker", layout="wide")
+
+import os
+
+DATA_DIR = os.getenv("RAILWAY_VOLUME_PATH", "/data")
+json_path = os.path.join(DATA_DIR, "ticker.json")
 
 st.set_page_config(layout="wide", page_title="FPL Season Ticker v13")
 
@@ -479,4 +484,5 @@ st.markdown("""
 - The excluded GW **remains visible** in the Fixture Grid but is greyed out to show it was excluded.
 - Only **one** GW can be excluded at a time for now.
 """)
+
 

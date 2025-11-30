@@ -205,7 +205,7 @@ with st.sidebar:
 
     st.markdown("---")
     st.header("Controls")
-    st.write("**Edit difficulties below (edits auto-save + apply).**")
+    st.write("**Edit difficulties (Type Manually or Sliders Below).**")
     st.write("**Difficulty meaning:**")
     st.write("- **Home** = difficulty of opponent visiting you (you are HOME)  \n- **Away** = difficulty when you travel to opponent (you are AWAY)")
 
@@ -243,7 +243,7 @@ with st.sidebar:
                 st.slider(f"{t} Away", min_value=500, max_value=2000,
                           value=st.session_state[f"slider_away_{t}"], key=f"slider_away_{t}")
 
-        if st.button("Apply sliders (save & apply)"):
+        if st.button("Apply Sliders (Refresh page after pressing)"):
             with st.spinner("Applying sliders and saving..."):
                 try:
                     new_df = pd.DataFrame({

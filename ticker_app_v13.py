@@ -243,7 +243,7 @@ with st.sidebar:
                 st.slider(f"{t} Away", min_value=500, max_value=2000,
                           value=st.session_state[f"slider_away_{t}"], key=f"slider_away_{t}")
 
-        if st.button("Apply Sliders (Refresh page after pressing)"):
+        if st.button("Apply"):
             with st.spinner("Applying sliders and saving..."):
                 try:
                     new_df = pd.DataFrame({
@@ -256,7 +256,7 @@ with st.sidebar:
                     st.success("Sliders applied and saved.")
                 except Exception as e:
                     st.error(f"Failed to apply/save sliders: {e}")
-
+    st.write("**Please MANUALLY REFRESH your browser to update after pressing Apply**")
     st.markdown("---")
     if st.button("Download difficulties (CSV)"):
         csv_bytes = st.session_state["difficulties"].to_csv(index=True).encode("utf-8")

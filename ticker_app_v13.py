@@ -205,9 +205,11 @@ with st.sidebar:
 
     st.markdown("---")
     st.header("Controls")
-    st.write("**Edit difficulties (Type Manually or Sliders Below).**")
     st.write("**Difficulty meaning:**")
-    st.write("- **Home** = difficulty of opponent visiting you (you are HOME)  \n- **Away** = difficulty when you travel to opponent (you are AWAY)")
+st.write("- **Home** = difficulty of opponent visiting you (you are HOME)  \n- **Away** = difficulty when you travel to opponent (you are AWAY)")
+
+with st.expander("Edit difficulties manually (table)"):
+    st.write("Edits auto-save and apply immediately.")
 
     # Editable table
     edited = st.data_editor(st.session_state["difficulties"], use_container_width=True)
@@ -216,7 +218,8 @@ with st.sidebar:
             edited_copy = edited.copy()
             edited_copy.index.name = "Team"
             st.session_state["difficulties"] = edited_copy
-            save_difficulties(edited_copy)
+            atomic_save_difficulties(edited_copy)
+            st.experimental_rerun()
 
     st.markdown("---")
     with st.expander("Difficulty Sliders (adjust and Apply)"):

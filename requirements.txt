@@ -3,4 +3,6 @@ pandas
 numpy
 requests
 matplotlib
-streamlit-browser-storage
+streamlit-local-storage
+
+

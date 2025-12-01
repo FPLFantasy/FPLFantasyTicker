@@ -219,3 +219,56 @@ with st.sidebar:
 # ... your existing ticker calculation + display code goes here ...
 # (unchanged, since storage logic is complete)
 # ---------------------
+
+# =============================================================
+#                     MAIN TICKER DISPLAY
+# =============================================================
+
+df_use = df.copy()
+df_diff = st.session_state["difficulties"]
+
+# Merge home/away difficulties
+df_use["HomeDiff"] = df_use["Home"].map(df_diff["Home"])
+df_use["AwayDiff"] = df_use["Away"].map(df_diff["Away"])
+
+# Final difficulty
+df_use["Diff"] = (df_use["AwayDiff"] + df_use["HomeDiff"]) / 2
+
+# Filter GW range
+df_show = df_use[df_use["GW"].between(gw_start, gw_end)]
+
+# Exclude GW (Free Hit)
+if excluded_gw is not None:
+    df_show = df_show[df_show["GW"] != excluded_gw]
+
+# Build table: rows = teams, columns = GWs
+matrix = pd.DataFrame(index=team_codes, columns=range_gws, dtype=float)
+
+for _, row in df_show.iterrows():
+    gw = row["GW"]
+    home = row["Home"]
+    away = row["Away"]
+    diff = row["Diff"]
+
+    if home in matrix.index:
+        matrix.loc[home, gw] = diff
+    if away in matrix.index:
+        matrix.loc[away, gw] = diff
+
+# Display heatmap-style ticker
+st.header("Season Ticker")
+st.write("This ticker uses your own saved Home/Away difficulty settings.")
+
+# Style
+cm_norm = colors.Normalize(vmin=matrix.min().min(), vmax=matrix.max().max())
+cmap = cm.get_cmap("RdYlGn_r")  # red = hard, green = easy
+
+def cell_color(val):
+    if np.isnan(val):
+        return "background-color: #222; color: #ccc;"
+    rgba = cmap(cm_norm(val))
+    rgb = tuple(int(255 * c) for c in rgba[:3])
+    return f"background-color: rgb{rgb}; color: black;"
+
+styled = matrix.style.applymap(cell_color).format("{:.0f}")
+st.dataframe(styled, use_container_width=True)

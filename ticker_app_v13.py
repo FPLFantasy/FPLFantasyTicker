@@ -176,7 +176,8 @@ with st.sidebar:
         edited_copy.index.name = "Team"
         st.session_state["difficulties"] = edited_copy
         localS.setItem(KEY, edited_copy.to_dict())  # SAVE
-        st.experimental_rerun()
+        st.rerun()
+
 
     st.markdown("---")
 
@@ -211,7 +212,8 @@ with st.sidebar:
 
             st.session_state["difficulties"] = new_df
             localS.setItem(KEY, new_df.to_dict())   # SAVE
-            st.experimental_rerun()
+            st.rerun()
+
 
 # ---------------------
 # ... your existing ticker calculation + display code goes here ...

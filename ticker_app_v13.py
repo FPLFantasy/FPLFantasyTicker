@@ -1,26 +1,27 @@
-# ticker_app_v14.py — Pure Browser Local Storage Version (FINAL WORKING PATCH)
-# ---------------------------------------------------------------------------
-# - Uses streamlit-local-storage (NOT streamlit_browser_storage)
-# - Each user keeps their own Home/Away difficulties in browser localStorage
-# - No server storage, no volumes, no CSV, no env vars
+# ticker_app_v13.py
+# v13: improvements over v9
+# - Uses browser localStorage for per-user difficulties (streamlit-local-storage)
+# - No server-side shared CSV required (prevents one user's edits affecting others)
+# - Keeps all original UI, calculations and behavior otherwise unchanged
+# - Uses st.rerun() instead of removed experimental_rerun()
 
 import streamlit as st
 import pandas as pd
 import numpy as np
 import requests
-from typing import Tuple, Dict, List
 from matplotlib import cm, colors
+from typing import Tuple, Dict, List
 
-# ✅ WORKING LOCAL STORAGE LIBRARY
+# Local storage lib (must be in requirements.txt)
 from streamlit_local_storage import LocalStorage
 
-st.set_page_config(layout="wide", page_title="FPL Season Ticker v14")
+st.set_page_config(layout="wide", page_title="FPL Season Ticker v13")
 
 # ---------------------
-# Browser Local Storage
+# Browser local storage (per-user)
 # ---------------------
 localS = LocalStorage()
-KEY = "user_difficulties_v14"  # each user keeps their own data
+LOCAL_KEY = "saved_difficulties_v13"  # key in browser localStorage
 
 # ---------------------
 # API endpoints
@@ -29,7 +30,7 @@ FIX_API = "https://fantasy.premierleague.com/api/fixtures/"
 BOOT_API = "https://fantasy.premierleague.com/api/bootstrap-static/"
 
 # ---------------------
-# Utility: load data
+# Utility: load FPL data (robust)
 # ---------------------
 @st.cache_data(ttl=3600)
 def load_fpl_data() -> Tuple[pd.DataFrame, List[str], Dict[int, Dict[str,str]]]:
@@ -58,7 +59,7 @@ def load_fpl_data() -> Tuple[pd.DataFrame, List[str], Dict[int, Dict[str,str]]]:
         except Exception:
             teams = {}
 
-    if not teams and isinstance(fixtures, list):
+    if not teams and isinstance(fixtures, list) and fixtures:
         ids = set()
         for f in fixtures:
             try:
@@ -66,10 +67,10 @@ def load_fpl_data() -> Tuple[pd.DataFrame, List[str], Dict[int, Dict[str,str]]]:
                     ids.add(int(f["team_h"]))
                 if isinstance(f.get("team_a"), (int, float)):
                     ids.add(int(f["team_a"]))
-            except:
+            except Exception:
                 continue
         for tid in ids:
-            teams[tid] = {"name": f"Team {tid}", "short": str(tid)[:3].upper()}
+            teams[int(tid)] = {"name": f"Team {tid}", "short": str(tid)[:3].upper()}
 
     rows = []
     for f in fixtures:
@@ -78,197 +79,392 @@ def load_fpl_data() -> Tuple[pd.DataFrame, List[str], Dict[int, Dict[str,str]]]:
                 continue
             team_h = f.get("team_h")
             team_a = f.get("team_a")
-            if team_h not in teams:
-                teams[team_h] = {"name": f"Team {team_h}", "short": str(team_h)[:3].upper()}
-            if team_a not in teams:
-                teams[team_a] = {"name": f"Team {team_a}", "short": str(team_a)[:3].upper()}
-
+            if team_h not in teams and isinstance(team_h, (int, float)):
+                teams[int(team_h)] = {"name": f"Team {team_h}", "short": str(team_h)[:3].upper()}
+            if team_a not in teams and isinstance(team_a, (int, float)):
+                teams[int(team_a)] = {"name": f"Team {team_a}", "short": str(team_a)[:3].upper()}
             rows.append({
                 "GW": int(f.get("event") or 0),
-                "Home": teams.get(team_h, {}).get("short", ""),
-                "Away": teams.get(team_a, {}).get("short", ""),
-                "HomeName": teams.get(team_h, {}).get("name", ""),
-                "AwayName": teams.get(team_a, {}).get("name", ""),
+                "Home": teams.get(f.get("team_h"), {}).get("short", "") or "",
+                "Away": teams.get(f.get("team_a"), {}).get("short", "") or "",
+                "HomeName": teams.get(f.get("team_h"), {}).get("name", "") or "",
+                "AwayName": teams.get(f.get("team_a"), {}).get("name", "") or "",
                 "Kickoff": f.get("kickoff_time")
             })
-        except:
+        except Exception:
             continue
 
     df = pd.DataFrame(rows)
     if not df.empty:
         df = df.sort_values(["GW", "Kickoff"], na_position="last").reset_index(drop=True)
-
     team_list = sorted({v["short"] for v in teams.values() if v.get("short")})
     return df, team_list, teams
 
 # ---------------------
-# Load FPL fixture data
+# Loading FPL data with spinner and friendly errors
 # ---------------------
 with st.spinner("Loading FPL data..."):
     df, team_codes, teams_full = load_fpl_data()
 
-if df.empty:
-    st.error("Unable to load Fantasy Premier League fixtures.")
+if df.empty or len(team_codes) == 0 or not teams_full:
+    st.error(
+        "Unable to load Fantasy Premier League fixtures/team list right now. "
+        "This can happen during preseason or if the FPL API is unreachable."
+    )
+    st.info(
+        "If you deployed to Railway, ensure outbound HTTP to fantasy.premierleague.com is allowed. Try again later."
+    )
     st.stop()
 
 # ---------------------
-# Default difficulty table
+# Defaults (unchanged)
 # ---------------------
 DEFAULT_VALUES = {t: {"Home": 1250, "Away": 1350} for t in team_codes}
 
-DEFAULT_DF = pd.DataFrame({
-    "Team": team_codes,
-    "Home": [DEFAULT_VALUES[t]["Home"] for t in team_codes],
-    "Away": [DEFAULT_VALUES[t]["Away"] for t in team_codes]
-}).set_index("Team")
+# ---------------------
+# Local-storage based persistence helpers (replace disk IO)
+# Keep function names so the rest of your script is unchanged.
+# ---------------------
+def load_saved_difficulties_from_disk() -> pd.DataFrame:
+    """
+    NOTE: Keep original function name for compatibility.
+    Now loads per-user saved difficulties from browser localStorage.
+    Returns DataFrame or None.
+    """
+    try:
+        saved = localS.getItem(LOCAL_KEY)
+        if saved is None:
+            return None
+        # saved expected to be a dict with orient='index'
+        try:
+            df_saved = pd.DataFrame.from_dict(saved, orient="index")
+            # ensure columns Home/Away exist
+            if "Home" in df_saved.columns and "Away" in df_saved.columns:
+                df_saved["Home"] = pd.to_numeric(df_saved["Home"], errors="coerce")
+                df_saved["Away"] = pd.to_numeric(df_saved["Away"], errors="coerce")
+                # ensure index name is Team if not present
+                if df_saved.index.name is None:
+                    df_saved.index.name = "Team"
+                return df_saved
+            else:
+                # malformed saved object
+                return None
+        except Exception:
+            return None
+    except Exception:
+        return None
+
+def atomic_save_difficulties(df_to_save: pd.DataFrame):
+    """
+    NOTE: Keep original function name for compatibility.
+    Now saves to browser localStorage for the current user.
+    """
+    try:
+        df_copy = df_to_save.copy()
+        # ensure index name is Team
+        df_copy.index.name = "Team"
+        # store with orient='index' so index keys -> row dicts
+        localS.setItem(LOCAL_KEY, df_copy.to_dict(orient="index"))
+        # show success to the user
+        st.success("Saved difficulties to your browser (local storage).")
+    except Exception as e:
+        st.error(f"Failed to save difficulties to browser local storage: {e}")
 
 # ---------------------
-# Load difficulties from localStorage → into session_state
+# Initialize difficulties in session_state (so UI is reactive)
 # ---------------------
 if "difficulties" not in st.session_state:
-    saved = localS.getItem(KEY)
-
-    if saved is not None:
-        try:
-            df_local = pd.DataFrame.from_dict(saved)
-            df_local.index.name = "Team"
-            st.session_state["difficulties"] = df_local
-        except:
-            st.session_state["difficulties"] = DEFAULT_DF.copy()
+    saved = load_saved_difficulties_from_disk()
+    if isinstance(saved, pd.DataFrame):
+        st.session_state["difficulties"] = saved.copy()
     else:
-        st.session_state["difficulties"] = DEFAULT_DF.copy()
+        st.session_state["difficulties"] = pd.DataFrame({
+            "Team": team_codes,
+            "Home": [DEFAULT_VALUES.get(t, {}).get("Home", 1250) for t in team_codes],
+            "Away": [DEFAULT_VALUES.get(t, {}).get("Away", 1350) for t in team_codes],
+        }).set_index("Team")
 
-# Ensure all teams exist
-df_cur = st.session_state["difficulties"]
-for t in team_codes:
-    if t not in df_cur.index:
-        df_cur.loc[t] = DEFAULT_VALUES[t]
-st.session_state["difficulties"] = df_cur.reindex(team_codes)
+def ensure_difficulties_cover_teams():
+    df_cur = st.session_state["difficulties"]
+    for t in team_codes:
+        if t not in df_cur.index:
+            df_cur.loc[t] = [DEFAULT_VALUES.get(t, {}).get("Home", 1250),
+                              DEFAULT_VALUES.get(t, {}).get("Away", 1350)]
+    st.session_state["difficulties"] = df_cur.reindex(team_codes)
+
+ensure_difficulties_cover_teams()
 
 # ---------------------
-# Sidebar controls
+# Sidebar: GW selection, difficulty editor, sliders
 # ---------------------
 with st.sidebar:
-
-    min_gw, max_gw = int(df["GW"].min()), int(df["GW"].max())
+    if not df.empty:
+        min_gw, max_gw = int(df["GW"].min()), int(df["GW"].max())
+    else:
+        min_gw, max_gw = 1, 38
     gw_start, gw_end = st.slider(
         "Select GW Range",
         min_value=min_gw,
         max_value=max_gw,
         value=(min(min_gw+11, max_gw), min(min_gw+15, max_gw))
     )
-    range_gws = list(range(gw_start, gw_end + 1))
 
-    exclude_choice = st.selectbox(
-        "Exclude a GW (optional / Free Hit)",
-        ["None"] + [str(g) for g in range_gws],
-        index=0
-    )
-    excluded_gw = None if exclude_choice == "None" else int(exclude_choice)
+    range_gws = list(range(gw_start, gw_end + 1))
+    if range_gws:
+        exclude_options = ["None"] + [str(g) for g in range_gws]
+        exclusion_choice = st.selectbox("Exclude a GW from the selected range (optional/FreeHit Week)", exclude_options, index=0)
+        excluded_gw = None if exclusion_choice == "None" else int(exclusion_choice)
+        if excluded_gw is not None:
+            st.info(f"GW{excluded_gw} will be excluded from totals/avg calculations (it will remain visible in the grid).")
+    else:
+        excluded_gw = None
 
     st.markdown("---")
     st.header("Controls")
-    st.write("Edits auto-save to your browser (per user).")
 
+    st.write("**Edit difficulties below (edits auto-save + apply).**")
+    st.write("**Difficulty meaning:**")
+    st.write("- **Home** = difficulty of opponent visiting you (you are HOME)  \n- **Away** = difficulty when you travel to opponent (you are AWAY)")
+
+    # Editable table
     edited = st.data_editor(st.session_state["difficulties"], use_container_width=True)
     if not edited.equals(st.session_state["difficulties"]):
-        edited_copy = edited.copy()
-        edited_copy.index.name = "Team"
-        st.session_state["difficulties"] = edited_copy
-        localS.setItem(KEY, edited_copy.to_dict())  # SAVE
-        st.rerun()
-
-
-    st.markdown("---")
-
-    with st.expander("Difficulty Sliders (adjust + Apply)"):
-
-        for t in team_codes:
-            h_key = f"slider_home_{t}"
-            a_key = f"slider_away_{t}"
-
-            if h_key not in st.session_state:
-                st.session_state[h_key] = int(df_cur.loc[t, "Home"])
-            if a_key not in st.session_state:
-                st.session_state[a_key] = int(df_cur.loc[t, "Away"])
-
-        for t in team_codes:
-            c1, c2 = st.columns(2)
-            with c1:
-                st.slider(f"{t} Home", 500, 2000,
-                          st.session_state[f"slider_home_{t}"],
-                          key=f"slider_home_{t}")
-            with c2:
-                st.slider(f"{t} Away", 500, 2000,
-                          st.session_state[f"slider_away_{t}"],
-                          key=f"slider_away_{t}")
-
-        if st.button("Apply sliders"):
-            new_df = pd.DataFrame({
-                "Team": team_codes,
-                "Home": [st.session_state[f"slider_home_{t}"] for t in team_codes],
-                "Away": [st.session_state[f"slider_away_{t}"] for t in team_codes],
-            }).set_index("Team")
-
-            st.session_state["difficulties"] = new_df
-            localS.setItem(KEY, new_df.to_dict())   # SAVE
+        with st.spinner("Saving edited difficulties..."):
+            edited_copy = edited.copy()
+            edited_copy.index.name = "Team"
+            st.session_state["difficulties"] = edited_copy
+            atomic_save_difficulties(edited_copy)
+            # ensure UI reflects saved changes without manual refresh
             st.rerun()
 
+    st.markdown("---")
+    with st.expander("Difficulty Sliders (adjust and Apply)"):
+        st.markdown("Use sliders to visually adjust Home/Away. Click **Apply sliders** to commit changes.")
+
+        for t in team_codes:
+            kh = f"slider_home_{t}"
+            ka = f"slider_away_{t}"
+            if kh not in st.session_state:
+                try:
+                    st.session_state[kh] = int(st.session_state["difficulties"].loc[t, "Home"])
+                except Exception:
+                    st.session_state[kh] = DEFAULT_VALUES[t]["Home"]
+            if ka not in st.session_state:
+                try:
+                    st.session_state[ka] = int(st.session_state["difficulties"].loc[t, "Away"])
+                except Exception:
+                    st.session_state[ka] = DEFAULT_VALUES[t]["Away"]
+
+        for t in team_codes:
+            c1, c2 = st.columns([1,1])
+            with c1:
+                st.slider(f"{t} Home", min_value=500, max_value=2000, value=st.session_state[f"slider_home_{t}"], key=f"slider_home_{t}")
+            with c2:
+                st.slider(f"{t} Away", min_value=500, max_value=2000, value=st.session_state[f"slider_away_{t}"], key=f"slider_away_{t}")
+
+        if st.button("Apply sliders (save & apply)"):
+            with st.spinner("Applying sliders and saving..."):
+                try:
+                    new_df = pd.DataFrame({
+                        "Team": team_codes,
+                        "Home": [st.session_state[f"slider_home_{t}"] for t in team_codes],
+                        "Away": [st.session_state[f"slider_away_{t}"] for t in team_codes],
+                    }).set_index("Team")
+                    st.session_state["difficulties"] = new_df
+                    atomic_save_difficulties(new_df)
+                    # reflect changes immediately
+                    st.rerun()
+                except Exception as e:
+                    st.error(f"Failed to apply/save sliders: {e}")
+
+    st.markdown("---")
+    if st.button("Download difficulties (CSV)"):
+        csv_bytes = st.session_state["difficulties"].to_csv(index=True).encode("utf-8")
+        st.download_button("Download saved_difficulties.csv", data=csv_bytes, file_name="saved_difficulties.csv")
+    uploaded = st.file_uploader("Import difficulties CSV (will overwrite)", type=["csv"])
+    if uploaded is not None:
+        try:
+            imported = pd.read_csv(uploaded).set_index("Team")
+            imported["Home"] = pd.to_numeric(imported["Home"], errors="coerce")
+            imported["Away"] = pd.to_numeric(imported["Away"], errors="coerce")
+            st.session_state["difficulties"] = imported
+            atomic_save_difficulties(imported)
+            st.success("Imported and saved difficulties (to your browser).")
+            st.rerun()
+        except Exception as e:
+            st.error(f"Import failed: {e}")
 
 # ---------------------
-# ... your existing ticker calculation + display code goes here ...
-# (unchanged, since storage logic is complete)
+# Computations: totals/avg per team (use selected GW range, excluding excluded_gw)
 # ---------------------
+if excluded_gw is None:
+    subset_for_calcs = df[(df["GW"] >= gw_start) & (df["GW"] <= gw_end)]
+else:
+    subset_for_calcs = df[(df["GW"] >= gw_start) & (df["GW"] <= gw_end) & (df["GW"] != excluded_gw)]
 
-# =============================================================
-#                     MAIN TICKER DISPLAY
-# =============================================================
+short_to_full = {v["short"]: v["name"] for v in teams_full.values() if v.get("short")}
 
-df_use = df.copy()
-df_diff = st.session_state["difficulties"]
+missing_opponents = set()
+team_stats = []
+for team in team_codes:
+    total = 0.0
+    matches = 0
+    cell_map = []
+    for _, r in subset_for_calcs.iterrows():
+        try:
+            if r["Home"] == team:
+                opp = r["Away"]
+                if opp in st.session_state["difficulties"].index:
+                    val = st.session_state["difficulties"].loc[opp, "Home"]
+                else:
+                    val = DEFAULT_VALUES.get(opp, {}).get("Home", np.nan)
+                    if pd.isna(val):
+                        missing_opponents.add(opp)
+                if not pd.isna(val):
+                    total += float(val)
+                    matches += 1
+                cell_map.append((r["GW"], opp, "H", val))
+            elif r["Away"] == team:
+                opp = r["Home"]
+                if opp in st.session_state["difficulties"].index:
+                    val = st.session_state["difficulties"].loc[opp, "Away"]
+                else:
+                    val = DEFAULT_VALUES.get(opp, {}).get("Away", np.nan)
+                    if pd.isna(val):
+                        missing_opponents.add(opp)
+                if not pd.isna(val):
+                    total += float(val)
+                    matches += 1
+                cell_map.append((r["GW"], opp, "A", val))
+        except Exception:
+            missing_opponents.add(r.get("Home") or r.get("Away") or "unknown")
+    avg = total / matches if matches > 0 else 0.0
+    team_full_name = short_to_full.get(team, team)
+    team_stats.append({
+        "Team": team,
+        "Name": team_full_name,
+        "Total": total,
+        "Avg": avg,
+        "Matches": matches,
+        "Cells": cell_map
+    })
 
-# Merge home/away difficulties
-df_use["HomeDiff"] = df_use["Home"].map(df_diff["Home"])
-df_use["AwayDiff"] = df_use["Away"].map(df_diff["Away"])
+stats_df = pd.DataFrame(team_stats).sort_values("Total").reset_index(drop=True)
+sorted_teams = stats_df["Team"].tolist()
 
-# Final difficulty
-df_use["Diff"] = (df_use["AwayDiff"] + df_use["HomeDiff"]) / 2
+if missing_opponents:
+    st.warning(
+        "Some opponents lacked difficulty values or full FPL bootstrap mapping. "
+        "Defaults/NaNs were used when necessary. "
+        "Example missing: " + ", ".join(sorted(map(str, list(missing_opponents)[:10]))) +
+        ("..." if len(missing_opponents) > 10 else "")
+    )
 
-# Filter GW range
-df_show = df_use[df_use["GW"].between(gw_start, gw_end)]
+# ---------------------
+# Build fixture grid view
+# ---------------------
+full_range_df = df[(df["GW"] >= gw_start) & (df["GW"] <= gw_end)]
+gw_list = list(range(gw_start, gw_end + 1))
+grid_text = pd.DataFrame("", index=sorted_teams, columns=[f"GW{g}" for g in gw_list])
+grid_vals = pd.DataFrame(np.nan, index=sorted_teams, columns=[f"GW{g}" for g in gw_list])
 
-# Exclude GW (Free Hit)
-if excluded_gw is not None:
-    df_show = df_show[df_show["GW"] != excluded_gw]
+for team in sorted_teams:
+    for gw in gw_list:
+        matches_gw = full_range_df[full_range_df["GW"] == gw]
+        parts = []
+        vals = []
+        for _, row in matches_gw.iterrows():
+            try:
+                if row["Home"] == team:
+                    opp = row["Away"]
+                    parts.append(str(opp).upper())
+                    if opp in st.session_state["difficulties"].index:
+                        v = st.session_state["difficulties"].loc[opp, "Home"]
+                    else:
+                        v = DEFAULT_VALUES.get(opp, {}).get("Home", np.nan)
+                        if pd.isna(v):
+                            missing_opponents.add(opp)
+                    vals.append(float(v) if not pd.isna(v) else np.nan)
+                elif row["Away"] == team:
+                    opp = row["Home"]
+                    parts.append(str(opp).lower())
+                    if opp in st.session_state["difficulties"].index:
+                        v = st.session_state["difficulties"].loc[opp, "Away"]
+                    else:
+                        v = DEFAULT_VALUES.get(opp, {}).get("Away", np.nan)
+                        if pd.isna(v):
+                            missing_opponents.add(opp)
+                    vals.append(float(v) if not pd.isna(v) else np.nan)
+            except Exception:
+                continue
+        if parts:
+            grid_text.loc[team, f"GW{gw}"] = ", ".join(parts)
+            numeric_vals = [v for v in vals if not pd.isna(v)]
+            grid_vals.loc[team, f"GW{gw}"] = np.nanmean(numeric_vals) if numeric_vals else np.nan
+        else:
+            grid_text.loc[team, f"GW{gw}"] = ""
+            grid_vals.loc[team, f"GW{gw}"] = np.nan
 
-# Build table: rows = teams, columns = GWs
-matrix = pd.DataFrame(index=team_codes, columns=range_gws, dtype=float)
+# ---------------------
+# UI: left sorted table, right fixture grid
+# ---------------------
+col_left, col_right = st.columns([1, 2])
 
-for _, row in df_show.iterrows():
-    gw = row["GW"]
-    home = row["Home"]
-    away = row["Away"]
-    diff = row["Diff"]
+with col_left:
+    st.subheader(f"Sorted Teams (GW{gw_start} → GW{gw_end}" + (f", excluding GW{excluded_gw})" if excluded_gw is not None else ")"))
+    display = stats_df[["Team", "Name", "Total", "Avg", "Matches"]].copy()
+    display["Avg"] = display["Avg"].round(1)
 
-    if home in matrix.index:
-        matrix.loc[home, gw] = diff
-    if away in matrix.index:
-        matrix.loc[away, gw] = diff
+    num_rows = max(1, display.shape[0])
+    row_height = 36
+    header_pad = 40
+    desired = num_rows * row_height + header_pad
+    height_display = int(max(300, min(1400, desired)))
 
-# Display heatmap-style ticker
-st.header("Season Ticker")
-st.write("This ticker uses your own saved Home/Away difficulty settings.")
+    st.dataframe(display, height=height_display, use_container_width=True, hide_index=True)
 
-# Style
-cm_norm = colors.Normalize(vmin=matrix.min().min(), vmax=matrix.max().max())
-cmap = cm.get_cmap("RdYlGn_r")  # red = hard, green = easy
+    if st.button("Download sorted CSV"):
+        csv_bytes = display.to_csv(index=False).encode("utf-8")
+        st.download_button("Download sorted_ticker.csv", data=csv_bytes, file_name="sorted_ticker.csv")
+        st.success("Prepared CSV for download.")
 
-def cell_color(val):
-    if np.isnan(val):
-        return "background-color: #222; color: #ccc;"
-    rgba = cmap(cm_norm(val))
-    rgb = tuple(int(255 * c) for c in rgba[:3])
-    return f"background-color: rgb{rgb}; color: black;"
+with col_right:
+    st.subheader(f"Fixture Grid (GW{gw_start} → GW{gw_end}) — excluded GW is greyed")
+    cmap = cm.get_cmap("RdYlGn_r")
+    try:
+        vmin = np.nanmin(grid_vals.values)
+        vmax = np.nanmax(grid_vals.values)
+        if np.isnan(vmin) or np.isnan(vmax) or vmin == vmax:
+            vmin, vmax = 500, 2000
+    except Exception:
+        vmin, vmax = 500, 2000
+    norm = colors.Normalize(vmin=vmin, vmax=vmax)
 
-styled = matrix.style.applymap(cell_color).format("{:.0f}")
-st.dataframe(styled, use_container_width=True)
+    def style_cell_value(val):
+        if val is None or (isinstance(val, float) and np.isnan(val)):
+            return ""
+        col = colors.to_hex(cmap(norm(val)))
+        return f"background-color:{col};color:black;"
+
+    styles = pd.DataFrame("", index=grid_text.index, columns=grid_text.columns)
+    for r in grid_text.index:
+        for c in grid_text.columns:
+            gw_num = int(c.replace("GW", ""))
+            v = grid_vals.loc[r, c]
+            if excluded_gw is not None and gw_num == excluded_gw:
+                styles.loc[r, c] = "background-color:#e6e6e6;color:#888888;"
+            else:
+                if not (pd.isna(v)):
+                    styles.loc[r, c] = style_cell_value(v)
+
+    styled = grid_text.style.apply(lambda row: styles.loc[row.name], axis=1)
+    st.dataframe(styled, height=800, use_container_width=True)
+
+# Footer / notes
+st.markdown("""
+---
+### Notes about excluded GW
+- The selected GW to exclude is **not** included in the Total / Avg calculations.
+- The excluded GW **remains visible** in the Fixture Grid but is greyed out to show it was excluded.
+- Only **one** GW can be excluded at a time for now.
+""")

@@ -21,6 +21,7 @@ st.set_page_config(layout="wide", page_title="FPL Season Ticker v13")
 # Browser local storage (per-user)
 # ---------------------
 localS = LocalStorage()
+localS.load_all() # <-- 🎯 ADDED: This ensures data is loaded from browser storage on script execution
 LOCAL_KEY = "saved_difficulties_v13"  # key in browser localStorage
 
 # ---------------------
@@ -189,7 +190,7 @@ def ensure_difficulties_cover_teams():
     for t in team_codes:
         if t not in df_cur.index:
             df_cur.loc[t] = [DEFAULT_VALUES.get(t, {}).get("Home", 1250),
-                              DEFAULT_VALUES.get(t, {}).get("Away", 1350)]
+                             DEFAULT_VALUES.get(t, {}).get("Away", 1350)]
     st.session_state["difficulties"] = df_cur.reindex(team_codes)
 
 ensure_difficulties_cover_teams()

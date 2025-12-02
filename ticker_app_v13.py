@@ -21,7 +21,7 @@ st.set_page_config(layout="wide", page_title="FPL Season Ticker v13")
 # Browser local storage (per-user)
 # ---------------------
 localS = LocalStorage() # This line ensures the component is initialized
-localS_output = localS.st_component() # <-- 🎯 NEW FIX: Forces data synchronization before session_state is checked
+localS.render()
 LOCAL_KEY = "saved_difficulties_v13"  # key in browser localStorage
 
 # ---------------------

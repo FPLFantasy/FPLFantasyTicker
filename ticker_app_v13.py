@@ -20,8 +20,8 @@ st.set_page_config(layout="wide", page_title="FPL Season Ticker v13")
 # ---------------------
 # Browser local storage (per-user)
 # ---------------------
-localS = LocalStorage()
-localS.load_all() # <-- 🎯 ADDED: This ensures data is loaded from browser storage on script execution
+localS = LocalStorage() # This line ensures the component is initialized and begins sync
+# localS.load_all() # <-- ❌ REMOVED: This was the source of the 'AttributeError'
 LOCAL_KEY = "saved_difficulties_v13"  # key in browser localStorage
 
 # ---------------------

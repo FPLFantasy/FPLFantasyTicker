@@ -22,7 +22,7 @@ st.set_page_config(layout="wide", page_title="FPL Season Ticker v13")
 # ---------------------
 localS = LocalStorage() # This line ensures the component is initialized and begins sync
 # localS.load_all() # <-- ❌ REMOVED: This was the source of the 'AttributeError'
-LOCAL_KEY = "saved_difficulties_v13"  # key in browser localStorage
+LOCAL_KEY = "saved_difficulties_v13" # key in browser localStorage
 
 # ---------------------
 # API endpoints
@@ -118,9 +118,49 @@ if df.empty or len(team_codes) == 0 or not teams_full:
     st.stop()
 
 # ---------------------
-# Defaults (unchanged)
+# Defaults (CUSTOMIZABLE)
+# NOTE: Edit CUSTOM_DEFAULTS below to set the initial difficulties for each team.
+# Keys must be the FPL short codes (e.g., 'ARS', 'AVL').
 # ---------------------
-DEFAULT_VALUES = {t: {"Home": 1250, "Away": 1350} for t in team_codes}
+CUSTOM_DEFAULTS = {
+    # --- START EDITING YOUR CUSTOM DEFAULTS HERE ---
+    "ARS": {"Home": 1750, "Away": 1950},  # Example: Arsenal (Strong)
+    "AVL": {"Home": 1100, "Away": 1250},  # Example: Aston Villa (Moderate/Weak)
+    "BHA": {"Home": 1200, "Away": 1300},
+    "BOU": {"Home": 1100, "Away": 1250},
+    "BRE": {"Home": 1050, "Away": 1200},
+    "BUR": {"Home": 900, "Away": 950},
+    "CHE": {"Home": 1450, "Away": 1600},
+    "CRY": {"Home": 1150, "Away": 1300},
+    "EVE": {"Home": 1000, "Away": 1100},
+    "FUL": {"Home": 1050, "Away": 1150},
+    "LEE": {"Home": 1000, "Away": 1050},  # Example: Arsenal (Strong)
+    "LIV": {"Home": 1400, "Away": 1500},  # Example: Aston Villa (Moderate/Weak)
+    "MCI": {"Home": 1450, "Away": 1600},
+    "MUN": {"Home": 1200, "Away": 1300},
+    "NEW": {"Home": 1150, "Away": 1300},
+    "NFO": {"Home": 1050, "Away": 1100},
+    "SUN": {"Home": 1000, "Away": 1150},
+    "TOT": {"Home": 1000, "Away": 1150},
+    "WHU": {"Home": 900, "Away": 1000},
+    "WOL": {"Home": 750, "Away": 800},
+    # ...
+    # --- END EDITING YOUR CUSTOM DEFAULTS HERE ---
+}
+
+# Generic fallback values for any team not in the custom list
+GENERIC_HOME_DEFAULT = 1250
+GENERIC_AWAY_DEFAULT = 1350
+
+# Construct the final DEFAULT_VALUES dictionary using custom values or fallback
+DEFAULT_VALUES = {}
+for t in team_codes:
+    if t in CUSTOM_DEFAULTS:
+        # Use your custom, specified values
+        DEFAULT_VALUES[t] = CUSTOM_DEFAULTS[t]
+    else:
+        # Use the generic fallback for any team you didn't specify
+        DEFAULT_VALUES[t] = {"Home": GENERIC_HOME_DEFAULT, "Away": GENERIC_AWAY_DEFAULT}
 
 # ---------------------
 # Local-storage based persistence helpers (replace disk IO)
@@ -181,6 +221,7 @@ if "difficulties" not in st.session_state:
     else:
         st.session_state["difficulties"] = pd.DataFrame({
             "Team": team_codes,
+            # Use the values from the DEFAULT_VALUES dictionary constructed above
             "Home": [DEFAULT_VALUES.get(t, {}).get("Home", 1250) for t in team_codes],
             "Away": [DEFAULT_VALUES.get(t, {}).get("Away", 1350) for t in team_codes],
         }).set_index("Team")
@@ -189,6 +230,7 @@ def ensure_difficulties_cover_teams():
     df_cur = st.session_state["difficulties"]
     for t in team_codes:
         if t not in df_cur.index:
+            # Use the values from the DEFAULT_VALUES dictionary constructed above
             df_cur.loc[t] = [DEFAULT_VALUES.get(t, {}).get("Home", 1250),
                              DEFAULT_VALUES.get(t, {}).get("Away", 1350)]
     st.session_state["difficulties"] = df_cur.reindex(team_codes)

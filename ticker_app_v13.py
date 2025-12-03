@@ -444,9 +444,13 @@ for team in sorted_teams:
 # ---------------------
 # UI: left sorted table, right fixture grid
 # ---------------------
-st.markdown(
-    "This editable ticker tool is **free**. If you find it useful, "buy us a coffee" via "
-    "[Ko-fi ☕](https://ko-fi.com/fplfantasy). Thank you! "
+st.markdown("This editable ticker tool is **free**. If you find it useful, please consider supporting our project below. Thank you!")
+
+# Creates a single, prominent Ko-fi button
+st.link_button(
+    label="Buy Us a Coffee on Ko-fi ☕", 
+    url="https://ko-fi.com/fplfantasy", 
+    type="primary" # Makes the button stand out
 )
 
 col_left, col_right = st.columns([1, 2])

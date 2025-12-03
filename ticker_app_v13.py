@@ -499,8 +499,56 @@ with col_right:
 # Footer / notes
 st.markdown("""
 ---
-### Notes about excluded GW
-- The selected GW to exclude is **not** included in the Total / Avg calculations.
-- The excluded GW **remains visible** in the Fixture Grid but is greyed out to show it was excluded.
-- Only **one** GW can be excluded at a time for now.
-""")
+privacy_text = """
+### Privacy Policy 🛡️
+This policy describes how we handle the data you provide.
+1. **Data Collection:** We only collect anonymous usage statistics for site improvement.
+2. **AdSense Integration:** We use Google AdSense for monetization, which collects data to serve personalized ads.
+3. **Third Parties:** We do not sell or share your personal data with other third parties.
+"""
+
+terms_text = """
+### Terms and Conditions 📜
+By using this application, you agree to the following terms:
+1. **Disclaimer:** This tool is provided "as is" for informational and entertainment purposes without warranty of any kind.
+2. **Liability:** We are not liable for any damages or losses resulting from the use or inability to use this application.
+3. **Changes:** We reserve the right to change these terms at any time.
+"""
+
+# Footer Links (Styled with custom HTML)
+st.markdown("""
+    <style>
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            padding: 10px 0;
+            font-size: 0.85rem;
+            margin-top: 10px; /* Add a little space above the footer links */
+        }
+        .footer-links a {
+            color: #888888; /* Subtle gray link color */
+            text-decoration: none;
+        }
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+    <div class="footer-links">
+        <a href="#privacy-policy">Privacy Policy</a>
+        <a href="#terms-and-conditions">Terms & Conditions</a>
+    </div>
+    """, unsafe_allow_html=True)
+
+# Content Reveal Section (Anchor targets and Expanders)
+# Note: These use the scroll-to feature, so placing them near the end works best.
+
+# Privacy Policy Section
+st.markdown("<a id='privacy-policy'></a>", unsafe_allow_html=True)
+with st.expander("Privacy Policy Details", expanded=False):
+    st.markdown(privacy_text)
+
+# Terms and Conditions Section
+st.markdown("<a id='terms-and-conditions'></a>", unsafe_allow_html=True)
+with st.expander("Terms and Conditions Details", expanded=False):
+    st.markdown(terms_text)

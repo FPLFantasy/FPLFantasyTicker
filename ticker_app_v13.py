@@ -445,9 +445,8 @@ for team in sorted_teams:
 # UI: left sorted table, right fixture grid
 # ---------------------
 st.markdown(
-    "This editable ticker tool is **free**. If you find it useful, support us via "
-    "[Ko-fi ☕](https://ko-fi.com/fplfantasy) or "
-    "[PayPal 💰](https://PayPal.Me/FPLFantasy). Thank you!"
+    "This editable ticker tool is **free**. If you find it useful, "buy us a coffee" via "
+    "[Ko-fi ☕](https://ko-fi.com/fplfantasy). Thank you! "
 )
 
 col_left, col_right = st.columns([1, 2])

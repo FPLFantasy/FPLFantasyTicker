@@ -259,7 +259,7 @@ with st.sidebar:
 
     st.markdown("---")
     st.header("Controls")
-
+    st.write("We update the **default** difficultiese every GW")
     st.write("**Edit difficulties (In the table or sliders below).**")
     st.write("- **Home** = Difficulty of opponent visiting you (you're HOME)  \n- **Away** = Difficulty when you travel (you're AWAY)")
 

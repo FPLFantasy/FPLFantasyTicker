@@ -1,9 +1,4 @@
-# ticker_app_v13.py
-# v13: improvements over v9
-# - Uses browser localStorage for per-user difficulties (streamlit-local-storage)
-# - No server-side shared CSV required (prevents one user's edits affecting others)
-# - Keeps all original UI, calculations and behavior otherwise unchanged
-# - Uses st.rerun() instead of removed experimental_rerun()
+
 
 import streamlit as st
 import pandas as pd

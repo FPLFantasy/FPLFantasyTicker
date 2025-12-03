@@ -508,12 +508,15 @@ st.markdown("""
 # --- START: AdSense/Legal Compliance Section (Placed BELOW Notes) ---
 
 # Legal Text Definitions
-privacy_text = """
+# *** IMPORTANT: UPDATE 'your.contact@email.com' with your actual email address ***
+YOUR_CONTACT_EMAIL = "FPL.is.Fantasy@gmail.com"
+
+privacy_text = f"""
 ### Privacy Policy 🛡️
 This policy describes how we handle the data you provide.
 1. **Data Collection:** We only collect anonymous usage statistics for site improvement.
 2. **AdSense Integration:** We use Google AdSense for monetization, which collects data to serve personalized ads.
-3. **Third Parties:** We do not sell or share your personal data with other third parties.
+3. **Contact:** For any privacy concerns, please contact us at **{YOUR_CONTACT_EMAIL}**.
 """
 
 terms_text = """
@@ -524,34 +527,33 @@ By using this application, you agree to the following terms:
 3. **Changes:** We reserve the right to change these terms at any time.
 """
 
-# Footer Links (Styled with custom HTML)
-# Note: The 'margin-top' helps separate these links visually from the notes above.
-st.markdown("""
+# Footer Links (Styled with custom HTML, now including Contact Email)
+st.markdown(f"""
     <style>
-        .footer-links {
+        .footer-links {{
             display: flex;
             justify-content: center;
             gap: 20px;
             padding: 10px 0;
             font-size: 0.85rem;
             margin-top: 10px; 
-        }
-        .footer-links a {
+        }}
+        .footer-links a {{
             color: #888888; /* Subtle gray link color */
             text-decoration: none;
-        }
-        .footer-links a:hover {
+        }}
+        .footer-links a:hover {{
             text-decoration: underline;
-        }
+        }}
     </style>
     <div class="footer-links">
         <a href="#privacy-policy">Privacy Policy</a>
         <a href="#terms-and-conditions">Terms & Conditions</a>
+        <a href="mailto:{YOUR_CONTACT_EMAIL}">Contact</a>
     </div>
     """, unsafe_allow_html=True)
 
 # Content Reveal Section (Anchor targets and Expanders)
-# The anchor links will scroll the user down to this final section of the page.
 
 # Privacy Policy Section
 st.markdown("<a id='privacy-policy'></a>", unsafe_allow_html=True)

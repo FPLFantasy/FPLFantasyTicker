@@ -513,18 +513,215 @@ YOUR_CONTACT_EMAIL = "FPL.is.Fantasy@gmail.com"
 
 privacy_text = f"""
 ### Privacy Policy 🛡️
-This policy describes how we handle the data you provide.
-1. **Data Collection:** We only collect anonymous usage statistics for site improvement.
-2. **AdSense Integration:** We use Google AdSense for monetization, which collects data to serve personalized ads.
+Last updated: 3rd Dec, 2025
+
+Welcome to FPLFantasy.org (“we”, “our”, “the site”).
+Your privacy is important to us. This Privacy Policy explains what information we collect, how it is used, and the rights you have regarding your data.
+1. Information We Collect
+1.1. Information You Provide
+We do not require users to create an account and we do not collect any personal information (such as names, emails, or phone numbers).
+1.2. Automatically Collected Information
+Like most websites, we may automatically collect non-personally identifiable information such as:
+IP address (processed temporarily by our hosting provider)
+Browser type and version
+Device information
+Anonymous usage statistics
+This information is used only for:
+site performance
+security
+analytics
+1.3. Local Data Stored on Your Device
+The FPL ticker app saves difficulty settings and preferences in your browser’s localStorage.
+This data never leaves your device.
+We cannot access, view, or store any of these values on our servers.
+Clearing your browser storage removes this data.
+2. Cookies and Third-Party Services
+2.1. Google AdSense
+We use Google AdSense to serve advertisements on the site.
+Google may use cookies — including DoubleClick cookies — to:
+deliver personalized or non-personalized ads
+limit how often ads are shown
+measure ad performance
+Google may collect:
+IP address
+general location
+browsing behavior across the web
+Users can control Google’s ad personalization here:
+https://www.google.com/settings/ads
+2.2. Google Analytics (If You Add It)
+We may use Google Analytics to gather anonymized usage data.
+Google Analytics does not provide us with personally identifiable information.
+2.3. Donation Providers
+If you choose to donate via PayPal or BuyMeACoffee, those platforms may collect personal and payment information according to their own Privacy Policies.
+We do not receive or store your payment details.
+3. How We Use the Information
+We use the limited information collected only to:
+Operate and maintain the website
+Improve functionality and performance
+Display ads
+Prevent abuse or security issues
+We do not:
+Sell your data
+Share personal information
+Track users across websites ourselves
+4. Data Sharing
+We may share anonymized usage data with:
+Google (Ads, Analytics)
+Hosting providers (infrastructure and security)
+We do not share personal data, because we do not collect any.
+5. Children’s Privacy
+This site is not directed to children under 13.
+We do not knowingly collect personal information from children.
+6. Your Rights
+Depending on your region (GDPR, CCPA), you may have rights such as:
+Access to data
+Request deletion
+Opt-out of personalized ads
+Learn what data third parties collect
+Because we do not store personal data, requests generally involve third-party services (e.g., Google, PayPal).
+7. Third-Party Links
+We may include links to external websites (e.g., donation pages).
+We are not responsible for the privacy practices of those websites.
+8. Updates to This Policy
+We may update this Privacy Policy at any time.
+Updates will be posted on this page with a new “Last updated” date.
+9. Contact Us
+📧 [FPL.is.Fantasy@gmail.com]
 3. **Contact:** For any privacy concerns, please contact us at **{YOUR_CONTACT_EMAIL}**.
+
+Cookie Policy
+1. What Are Cookies?
+Cookies are small text files stored on your device by your browser.
+They are commonly used to make websites function, improve user experience, and provide analytics or advertising features.
+This website itself does not set any cookies for storing user preferences — all app settings are saved locally in your browser’s localStorage, which never leaves your device.
+However, third-party services used on this site may set cookies.
+2. Cookies Used by Google AdSense
+We display advertisements through Google AdSense, which uses cookies to:
+deliver personalized or non-personalized ads
+limit how often an ad is shown
+measure ad performance
+detect invalid traffic (e.g., bots)
+Google may collect:
+IP address
+location (approximate)
+browser/device information
+browsing behavior across websites that use Google ads
+You can learn how Google uses cookies here:
+https://policies.google.com/technologies/cookies
+You may control ad personalization here:
+https://www.google.com/settings/ads
+3. Third-Party Cookies
+Third parties that may set cookies include:
+Google (Ads, Analytics)
+Payment/donation providers (PayPal, BuyMeACoffee) if you click those links
+These services operate under their own Privacy and Cookie Policies.
+4. Local Storage
+The FPLFantasy.org ticker stores difficulty settings and preferences in your browser’s localStorage, not in cookies.
+LocalStorage is not sent to us.
+We cannot access this data.
+You may clear it at any time via your browser settings.
+Because localStorage does not track you or send data externally, it is not subject to cookie consent laws.
+5. Cookie Consent (GDPR / UK / EEA)
+If you access the site from the European Economic Area (EEA), UK, or similar jurisdictions, you may be shown a cookie consent banner.
+You have the right to:
+accept or reject non-essential cookies
+change your consent at any time
+browse the site with non-personalized ads if you prefer
+Rejecting personalized ads does not prevent ads from showing — it only disables personalization.
+6. Managing Cookies
+You can control or delete cookies through your browser settings.
+Most browsers allow you to:
+block third-party cookies
+clear existing cookies
+prevent sites from saving data
+For more details, visit:
+https://www.allaboutcookies.org
 """
 
 terms_text = """
 ### Terms and Conditions 📜
-By using this application, you agree to the following terms:
-1. **Disclaimer:** This tool is provided "as is" for informational and entertainment purposes without warranty of any kind.
-2. **Liability:** We are not liable for any damages or losses resulting from the use or inability to use this application.
-3. **Changes:** We reserve the right to change these terms at any time.
+Last updated: [3rd Dec, 2025]
+Welcome to FPLFantasy.org (“we”, “our”, “the site”).
+By accessing or using our website and its tools, you agree to the following Terms and Conditions.
+If you do not agree, please stop using the site immediately.
+1. Use of the Website
+You may use FPLFantasy.org solely for:
+personal, non-commercial purposes
+viewing and using the FPL fixture ticker and related tools
+accessing ads and links displayed on the site
+You agree not to:
+misuse the site
+attempt to interfere with our servers or security
+scrape or copy the site for commercial use
+upload or distribute viruses, malware, or harmful code
+2. No Affiliation with the Premier League or Fantasy Premier League (FPL)
+FPLFantasy.org is an independent site and is not affiliated with:
+the Premier League
+Fantasy Premier League (FPL)
+any football club or official organization
+All trademarks belong to their respective owners.
+3. No Professional Advice
+The information on this website is for entertainment and informational purposes only.
+We do not provide:
+official FPL advice
+financial advice
+guarantees on accuracy
+Any decisions you make based on the site are your own responsibility.
+4. User Preferences Stored Locally
+The ticker stores user difficulty settings in your browser’s localStorage.
+We cannot access this data.
+It never leaves your device.
+You may delete it at any time via your browser.
+5. Third-Party Services
+We use third-party services such as:
+Google AdSense
+PayPal and BuyMeACoffee (optional donations)
+Hosting and analytics providers
+These services may have their own terms and privacy policies.
+Your use of the site constitutes acceptance of those third-party terms as well.
+6. Advertisements
+We display ads through Google AdSense.
+Google may:
+use cookies
+personalize ads based on your behavior
+collect certain non-personal data
+Your use of the site indicates agreement with Google’s advertising policies.
+You can control ad personalization via:
+https://www.google.com/settings/ads
+7. Intellectual Property
+Unless otherwise stated:
+all code, design, and content on the site belongs to FPLFantasy.org
+you may not copy, distribute, or resell it
+you may link to our site, but may not embed or clone it without permission
+8. Links to Other Websites
+Our site may contain links to external sites.
+We are not responsible for:
+the content on external websites
+their privacy practices
+their terms and conditions
+Use them at your own discretion.
+9. Limitation of Liability
+To the fullest extent permitted by law, FPLFantasy.org is not liable for:
+loss of data
+financial loss related to FPL decisions
+missed deadlines or gameweek errors
+any damages arising from use or inability to use the site
+You use the site at your own risk.
+10. Disclaimer of Warranties
+The website is provided “as is” and “as available”, without any warranties of any kind, including:
+accuracy
+reliability
+performance
+uninterrupted availability
+We may update or remove features at any time.
+11. Changes to These Terms
+We may update these Terms from time to time.
+Continued use of the site after changes means you accept the updated Terms.
+12. Governing Law
+These Terms are governed by the laws of Bahrain, without regard to conflict-of-law provisions.
+13. Contact Information
+For questions regarding these Terms, contact us at:
+📧 [FPL.is.Fantasy@gmail.com]
 """
 
 # Footer Links (Styled with custom HTML, now including Contact Email)

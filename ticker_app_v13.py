@@ -15,7 +15,7 @@ from typing import Tuple, Dict, List
 # Local storage lib (must be in requirements.txt)
 from streamlit_local_storage import LocalStorage
 
-st.set_page_config(layout="wide", page_title="FPL Season Ticker v13")
+st.set_page_config(layout="wide", page_title="FPL Fantasy Ticker")
 
 # ---------------------
 # Browser local storage (per-user)

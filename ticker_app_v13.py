@@ -444,7 +444,7 @@ for team in sorted_teams:
 # ---------------------
 # UI: left sorted table, right fixture grid
 # ---------------------
-st.markdown("This editable ticker tool is **free**. If you find it useful, please consider supporting our project below. Thank you!")
+st.markdown("You can easily edit this **free** FPL ticker in the << sidebar. If you find it useful, support us below. Thank you!")
 
 # Creates a single, prominent Ko-fi button
 st.link_button(

@@ -444,6 +444,8 @@ for team in sorted_teams:
 # ---------------------
 # UI: left sorted table, right fixture grid
 # ---------------------
+st.text("FPLFantasy.org ticker tool is free. If you find it useful, support this project via ")
+
 col_left, col_right = st.columns([1, 2])
 
 with col_left:

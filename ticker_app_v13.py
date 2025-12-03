@@ -266,8 +266,7 @@ with st.sidebar:
     st.header("Controls")
 
     st.write("**Edit difficulties (In the table or sliders below).**")
-    st.write("**Difficulty meaning:**")
-    st.write("- **Home** = difficulty of opponent visiting you (you're HOME)  \n- **Away** = difficulty when you travel (you're AWAY)")
+    st.write("- **Home** = Difficulty of opponent visiting you (you're HOME)  \n- **Away** = Difficulty when you travel (you're AWAY)")
 
     # Editable table
     edited = st.data_editor(st.session_state["difficulties"], use_container_width=True)
@@ -280,7 +279,7 @@ with st.sidebar:
             # ensure UI reflects saved changes without manual refresh
             st.rerun()
 
-    with st.expander("Difficulty Sliders (adjust and Apply)"):
+    with st.expander("Difficulty Sliders (Adjust & Apply)"):
         st.markdown("Use sliders to visually adjust Home/Away. Click **Apply sliders** to commit changes.")
 
         for t in team_codes:

@@ -265,7 +265,7 @@ with st.sidebar:
     st.markdown("---")
     st.header("Controls")
 
-    st.write("**Edit difficulties below (edits auto-save + apply).**")
+    st.write("**Edit difficulties (In the table or sliders below).**")
     st.write("**Difficulty meaning:**")
     st.write("- **Home** = difficulty of opponent visiting you (you are HOME)  \n- **Away** = difficulty when you travel to opponent (you are AWAY)")
 
@@ -280,7 +280,6 @@ with st.sidebar:
             # ensure UI reflects saved changes without manual refresh
             st.rerun()
 
-    st.markdown("---")
     with st.expander("Difficulty Sliders (adjust and Apply)"):
         st.markdown("Use sliders to visually adjust Home/Away. Click **Apply sliders** to commit changes.")
 

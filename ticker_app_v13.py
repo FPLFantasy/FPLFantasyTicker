@@ -256,10 +256,8 @@ with st.sidebar:
             st.info(f"GW{excluded_gw} will be excluded from totals/avg calculations (it will remain visible in the grid).")
     else:
         excluded_gw = None
-
     st.markdown("---")
-    st.header("Controls")
-
+    st.write("Note: We update default difficulties every GW")
     st.write("**Edit difficulties (In the table or sliders below).**")
     st.write("- **Home** = Difficulty of opponent visiting you (you're HOME)  \n- **Away** = Difficulty when you travel (you're AWAY)")
 
@@ -444,7 +442,7 @@ for team in sorted_teams:
 # ---------------------
 # UI: left sorted table, right fixture grid
 # ---------------------
-st.text("FPLFantasy.org ticker tool is free. If you find it useful, support this project via ")
+st.text("FPLFantasy.org ticker tool is **free**. If you find it useful, support this project via ")
 
 col_left, col_right = st.columns([1, 2])
 

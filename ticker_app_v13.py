@@ -497,13 +497,7 @@ with col_right:
     st.dataframe(styled, height=800, use_container_width=True)
 
 # Footer / notes
-st.markdown("""
----
-### Notes about excluded GW
-- The selected GW to exclude is **not** included in the Total / Avg calculations.
-- The excluded GW **remains visible** in the Fixture Grid but is greyed out to show it was excluded.
-- Only **one** GW can be excluded at a time for now.
-""")
+st.markdown("---")
 
 # --- START: AdSense/Legal Compliance Section (Placed BELOW Notes) ---
 

@@ -1,6 +1,14 @@
 
 
 import streamlit as st
+import os
+
+if st.query_params.get("ads") == "txt":
+    # Render the ads.txt content inside browser
+    with open("ads.txt") as f:
+        st.text(f.read())
+    st.stop()
+
 import pandas as pd
 import numpy as np
 import requests

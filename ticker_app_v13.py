@@ -7,15 +7,13 @@ import requests
 from matplotlib import cm, colors
 from typing import Tuple, Dict, List
 
-# Local storage lib (must be in requirements.txt)
-from streamlit_local_storage import LocalStorage
-
 st.markdown("""
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2872223536212467"
      crossorigin="anonymous"></script>
 """, unsafe_allow_html=True)
 
-
+# Local storage lib (must be in requirements.txt)
+from streamlit_local_storage import LocalStorage
 
 st.set_page_config(layout="wide", page_title="FPL Fantasy Ticker")
 

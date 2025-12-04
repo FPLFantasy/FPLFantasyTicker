@@ -11,12 +11,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy your Streamlit application files
 COPY . .
 
-# 🟢 CRITICAL STEP: Replace Streamlit's default index.html 🟢
-# The path is now correctly set to python3.13/
-# Line 1: Delete the old index.html
-RUN find /usr/local/lib/python3.13/site-packages/streamlit/static/ -name 'index.html' -delete
-
-# Line 2: Copy your new index.html with the Meta Tag
+# 🟢 CRITICAL STEP: Overwrite Streamlit's default index.html 🟢
+# This line copies your new index.html (with the Meta Tag) and overwrites the existing one.
 COPY index.html /usr/local/lib/python3.13/site-packages/streamlit/static/index.html
 
 # Expose the port Streamlit will run on

@@ -4,5 +4,8 @@ numpy
 requests
 matplotlib
 streamlit-local-storage
+fastapi
+uvicorn
+
 
 

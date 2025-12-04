@@ -2,11 +2,9 @@ import subprocess
 import threading
 from fastapi import FastAPI, Request
 from fastapi.responses import Response, PlainTextResponse
-from starlette.middleware.proxy_headers import ProxyHeadersMiddleware
 import httpx
 
 app = FastAPI()
-app.add_middleware(ProxyHeadersMiddleware)
 
 def run_streamlit():
     subprocess.run([
@@ -15,7 +13,11 @@ def run_streamlit():
         "--server.address=0.0.0.0"
     ])
 
-threading.Thread(target=run_streamlit, daemon=True).start()
+# Start Streamlit only once when the server starts
+@app.on_event("startup")
+def start_streamlit():
+    thread = threading.Thread(target=run_streamlit, daemon=True)
+    thread.start()
 
 @app.get("/ads.txt")
 async def ads():

@@ -8,8 +8,7 @@ from matplotlib import cm, colors
 from typing import Tuple, Dict, List
 
 st.markdown("""
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2872223536212467"
-     crossorigin="anonymous"></script>
+<meta name="google-adsense-account" content="ca-pub-2872223536212467">
 """, unsafe_allow_html=True)
 
 # Local storage lib (must be in requirements.txt)

@@ -4,6 +4,6 @@ numpy
 requests
 matplotlib
 streamlit-local-storage
-fastapi>=0.110
-uvicorn[standard]>=0.29
-httpx>=0.27
+fastapi
+uvicorn[standard]
+httpx

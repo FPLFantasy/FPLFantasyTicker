@@ -9,9 +9,6 @@ from typing import Tuple, Dict, List
 # Local storage lib (must be in requirements.txt)
 from streamlit_local_storage import LocalStorage
 
-st.markdown("""
-<meta name="google-adsense-account" content="ca-pub-2872223536212467">
-""", unsafe_allow_html=True)
 
 st.set_page_config(layout="wide", page_title="FPL Fantasy Ticker")
 

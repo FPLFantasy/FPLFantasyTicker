@@ -128,8 +128,8 @@ if df.empty or len(team_codes) == 0 or not teams_full:
 CUSTOM_DEFAULTS = {
     # --- START EDITING YOUR CUSTOM DEFAULTS HERE ---
     "ARS": {"Home": 1750, "Away": 1950},  # Example: Arsenal (Strong)
-    "AVL": {"Home": 1100, "Away": 1250},  # Example: Aston Villa (Moderate/Weak)
-    "BHA": {"Home": 1200, "Away": 1300},
+    "AVL": {"Home": 1200, "Away": 1300},  # Example: Aston Villa (Moderate/Weak)
+    "BHA": {"Home": 1150, "Away": 1300},
     "BOU": {"Home": 1100, "Away": 1250},
     "BRE": {"Home": 1050, "Away": 1200},
     "BUR": {"Home": 900, "Away": 950},
@@ -137,16 +137,16 @@ CUSTOM_DEFAULTS = {
     "CRY": {"Home": 1150, "Away": 1300},
     "EVE": {"Home": 1000, "Away": 1100},
     "FUL": {"Home": 1050, "Away": 1150},
-    "LEE": {"Home": 1000, "Away": 1050},  # Example: Arsenal (Strong)
+    "LEE": {"Home": 1000, "Away": 1100},  # Example: Arsenal (Strong)
     "LIV": {"Home": 1400, "Away": 1500},  # Example: Aston Villa (Moderate/Weak)
-    "MCI": {"Home": 1450, "Away": 1600},
+    "MCI": {"Home": 1500, "Away": 1650},
     "MUN": {"Home": 1200, "Away": 1300},
-    "NEW": {"Home": 1150, "Away": 1300},
+    "NEW": {"Home": 1200, "Away": 1350},
     "NFO": {"Home": 1050, "Away": 1100},
-    "SUN": {"Home": 1000, "Away": 1150},
+    "SUN": {"Home": 1100, "Away": 1250},
     "TOT": {"Home": 1000, "Away": 1150},
-    "WHU": {"Home": 900, "Away": 1000},
-    "WOL": {"Home": 750, "Away": 800},
+    "WHU": {"Home": 850, "Away": 950},
+    "WOL": {"Home": 650, "Away": 750},
     # ...
     # --- END EDITING YOUR CUSTOM DEFAULTS HERE ---
 }

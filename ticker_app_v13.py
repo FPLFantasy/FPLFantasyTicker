@@ -757,6 +757,7 @@ st.markdown(f"""
     <div class="footer-links">
         <a href="#privacy-policy">Privacy Policy</a>
         <a href="#terms-and-conditions">Terms & Conditions</a>
+        <a href="#about">About</a>
         <a href="mailto:{YOUR_CONTACT_EMAIL}">Contact</a>
     </div>
     """, unsafe_allow_html=True)
@@ -772,5 +773,19 @@ with st.expander("Privacy Policy Details", expanded=False):
 st.markdown("<a id='terms-and-conditions'></a>", unsafe_allow_html=True)
 with st.expander("Terms and Conditions Details", expanded=False):
     st.markdown(terms_text)
-    
+
+st.markdown("<a id='about'></a>", unsafe_allow_html=True)
+with st.expander("About FPLFantasy.org"):
+    st.markdown("""
+### About FPLFantasy.org
+
+FPLFantasy.org is a free tool built for the Fantasy Premier League managers and community.
+It provides a customizable and automated fixture ticker with difficulty ratings.
+
+We aim to keep the tool fast, free, and community-supported.  
+If you find it useful, consider supporting us on Ko-fi!
+
+Made by FPL Fantasy ❤️
+    """)
+
 # --- END: AdSense/Legal Compliance Section ---

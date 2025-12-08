@@ -19,7 +19,7 @@ st.markdown("""
 
     <!-- OpenGraph tags for social sharing -->
     <meta property="og:title" content="FPLFantasy.org – Live FPL Tools & Data">
-    <meta property="og:description" content="Live FPL fantasy stats, tools, charts and price predictions.">
+    <meta property="og:description" content="Live FPL fantasy tools and charts and price predictions.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://fplfantasy.org/">
 """, unsafe_allow_html=True)

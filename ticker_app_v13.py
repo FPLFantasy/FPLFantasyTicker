@@ -1,31 +1,52 @@
-
-
 import streamlit as st
 import os
 
+# --------------------------------------------
+# 1) Page config (only ONE allowed)
+# --------------------------------------------
+st.set_page_config(
+    page_title="FPL Fantasy | The free customizable FPL difficulties ticker",
+    page_icon="⚽",
+    layout="wide"
+)
+
+# --------------------------------------------
+# 2) SEO + OpenGraph tags (ADD HERE)
+# --------------------------------------------
+st.markdown("""
+    <!-- Meta description -->
+    <meta name="description" content="You can easily make your own personal Fantasy Premier League ticker.">
+
+    <!-- OpenGraph tags for social sharing -->
+    <meta property="og:title" content="FPLFantasy.org – Live FPL Tools & Data">
+    <meta property="og:description" content="Live FPL fantasy stats, tools, charts and price predictions.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://fplfantasy.org/">
+""", unsafe_allow_html=True)
+
+# --------------------------------------------
+# 3) Your existing query param logic
+# --------------------------------------------
 if st.query_params.get("ads") == "txt":
-    # Render the ads.txt content inside browser
     with open("ads.txt") as f:
         st.text(f.read())
     st.stop()
 
+# --------------------------------------------
+# 4) Imports (can stay here or above)
+# --------------------------------------------
 import pandas as pd
 import numpy as np
 import requests
 from matplotlib import cm, colors
 from typing import Tuple, Dict, List
-# Local storage lib (must be in requirements.txt)
 from streamlit_local_storage import LocalStorage
 
-
-st.set_page_config(layout="wide", page_title="FPL Fantasy Ticker")
-
-# ---------------------
-# Browser local storage (per-user)
-# ---------------------
-localS = LocalStorage() # This line ensures the component is initialized and begins sync
-# localS.load_all() # <-- ❌ REMOVED: This was the source of the 'AttributeError'
-LOCAL_KEY = "saved_difficulties_v13" # key in browser localStorage
+# --------------------------------------------
+# 5) Initialize local storage
+# --------------------------------------------
+localS = LocalStorage()
+LOCAL_KEY = "saved_difficulties_v13"
 
 # ---------------------
 # API endpoints

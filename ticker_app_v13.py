@@ -11,8 +11,10 @@ st.set_page_config(
 )
 
 st.markdown("""
-<link rel="icon" href="https://fplfantasy.org/static/favicon.png" type="image/png">
+<link rel="icon" type="image/png" sizes="250x250" href="/static/favicon.png">
+<link rel="apple-touch-icon" href="/static/favicon.png">
 """, unsafe_allow_html=True)
+
 
 
 # --------------------------------------------

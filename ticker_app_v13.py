@@ -11,8 +11,9 @@ st.set_page_config(
 )
 
 st.markdown("""
-    <link rel="icon" href="https://fplfantasy.org/favicon.png" type="image/png">
+<link rel="icon" href="https://fplfantasy.org/static/favicon.png" type="image/png">
 """, unsafe_allow_html=True)
+
 
 # --------------------------------------------
 # 2) SEO + OpenGraph tags (ADD HERE)

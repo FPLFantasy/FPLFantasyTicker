@@ -32,6 +32,17 @@ st.markdown("""
     <meta property="og:url" content="https://fplfantasy.org/">
 """, unsafe_allow_html=True)
 
+st.markdown("""
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-9TLWREX2PK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-9TLWREX2PK');
+</script>
+""", unsafe_allow_html=True)
 # --------------------------------------------
 # 3) Your existing query param logic
 # --------------------------------------------

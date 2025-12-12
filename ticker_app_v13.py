@@ -35,9 +35,17 @@ st.markdown("""
 # --------------------------------------------
 # 3) Your existing query param logic
 # --------------------------------------------
-if st.query_params.get("ads") == "txt":
-    with open("ads.txt") as f:
-        st.text(f.read())
+if st.query_params is None:
+    pass
+
+if st.request.path == "/ads.txt" or st.query_params.get("ads") == "txt":
+    # look for the ads.txt file in the static folder
+    ads_path = "static/ads.txt"
+    if os.path.exists(ads_path):
+        with open(ads_path, "r") as f:
+            st.write(f.read())
+    else:
+        st.write("ads.txt file not found")
     st.stop()
 
 # --------------------------------------------

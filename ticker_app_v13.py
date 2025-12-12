@@ -481,10 +481,7 @@ for team in sorted_teams:
 # ---------------------
 # UI: left sorted table, right fixture grid
 # ---------------------
-st.markdown(
-    "You can easily edit this **free** FPL ticker in the << sidebar.\n"
-    "We decided to keep this app **ads-free** because they are annoying 😊 If you find it useful, support us below. Thank you ❤️!"
-)
+st.markdown("**You can easily edit this **free** FPL ticker in the << sidebar.** We decided to keep it **ads-free** because they're annoying 😊 If you find it useful, support us below. Thank you ❤️!")
 
 # Creates a single, prominent Ko-fi button
 st.link_button(

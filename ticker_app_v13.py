@@ -181,7 +181,7 @@ CUSTOM_DEFAULTS = {
     "LIV": {"Home": 1400, "Away": 1500},  # Example: Aston Villa (Moderate/Weak)
     "MCI": {"Home": 1500, "Away": 1650},
     "MUN": {"Home": 1200, "Away": 1300},
-    "NEW": {"Home": 1200, "Away": 1350},
+    "NEW": {"Home": 1200, "Away": 1300},
     "NFO": {"Home": 1050, "Away": 1100},
     "SUN": {"Home": 1100, "Away": 1150},
     "TOT": {"Home": 1000, "Away": 1150},

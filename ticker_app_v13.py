@@ -169,12 +169,12 @@ CUSTOM_DEFAULTS = {
     # --- START EDITING YOUR CUSTOM DEFAULTS HERE ---
     "ARS": {"Home": 1750, "Away": 1950},  # Example: Arsenal (Strong)
     "AVL": {"Home": 1300, "Away": 1350},  # Example: Aston Villa (Moderate/Weak)
-    "BHA": {"Home": 1150, "Away": 1300},
+    "BHA": {"Home": 1150, "Away": 1250},
     "BOU": {"Home": 1100, "Away": 1250},
     "BRE": {"Home": 1050, "Away": 1150},
-    "BUR": {"Home": 850, "Away": 900},
+    "BUR": {"Home": 800, "Away": 850},
     "CHE": {"Home": 1450, "Away": 1600},
-    "CRY": {"Home": 1150, "Away": 1300},
+    "CRY": {"Home": 1150, "Away": 1250},
     "EVE": {"Home": 1000, "Away": 1100},
     "FUL": {"Home": 1000, "Away": 1150},
     "LEE": {"Home": 1000, "Away": 1100},  # Example: Arsenal (Strong)

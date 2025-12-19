@@ -183,7 +183,7 @@ CUSTOM_DEFAULTS = {
     "MUN": {"Home": 1200, "Away": 1300},
     "NEW": {"Home": 1200, "Away": 1350},
     "NFO": {"Home": 1050, "Away": 1100},
-    "SUN": {"Home": 1100, "Away": 1250},
+    "SUN": {"Home": 1100, "Away": 1150},
     "TOT": {"Home": 1000, "Away": 1150},
     "WHU": {"Home": 850, "Away": 950},
     "WOL": {"Home": 600, "Away": 700},

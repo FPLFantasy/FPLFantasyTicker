@@ -292,7 +292,7 @@ with st.sidebar:
         "Select GW Range",
         min_value=min_gw,
         max_value=max_gw,
-        value=(18, 22)
+        value=(19, 23)
     )
 
     range_gws = list(range(gw_start, gw_end + 1))

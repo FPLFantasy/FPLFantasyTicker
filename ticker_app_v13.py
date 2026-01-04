@@ -170,11 +170,11 @@ CUSTOM_DEFAULTS = {
     "ARS": {"Home": 1750, "Away": 1950},  # Example: Arsenal (Strong)
     "AVL": {"Home": 1300, "Away": 1350},  # Example: Aston Villa (Moderate/Weak)
     "BHA": {"Home": 1150, "Away": 1250},
-    "BOU": {"Home": 1100, "Away": 1250},
+    "BOU": {"Home": 1100, "Away": 1200},
     "BRE": {"Home": 1050, "Away": 1150},
     "BUR": {"Home": 800, "Away": 850},
-    "CHE": {"Home": 1450, "Away": 1600},
-    "CRY": {"Home": 1150, "Away": 1250},
+    "CHE": {"Home": 1450, "Away": 1550},
+    "CRY": {"Home": 1100, "Away": 1200},
     "EVE": {"Home": 1000, "Away": 1100},
     "FUL": {"Home": 1000, "Away": 1150},
     "LEE": {"Home": 1000, "Away": 1100},  # Example: Arsenal (Strong)
@@ -183,9 +183,9 @@ CUSTOM_DEFAULTS = {
     "MUN": {"Home": 1150, "Away": 1250},
     "NEW": {"Home": 1200, "Away": 1350},
     "NFO": {"Home": 1000, "Away": 1100},
-    "SUN": {"Home": 1100, "Away": 1150},
-    "TOT": {"Home": 1000, "Away": 1150},
-    "WHU": {"Home": 850, "Away": 950},
+    "SUN": {"Home": 1150, "Away": 1200},
+    "TOT": {"Home": 1050, "Away": 1150},
+    "WHU": {"Home": 800, "Away": 900},
     "WOL": {"Home": 550, "Away": 700},
     # ...
     # --- END EDITING YOUR CUSTOM DEFAULTS HERE ---

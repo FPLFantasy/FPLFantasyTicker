@@ -167,12 +167,12 @@ if df.empty or len(team_codes) == 0 or not teams_full:
 # ---------------------
 CUSTOM_DEFAULTS = {
     # --- START EDITING YOUR CUSTOM DEFAULTS HERE ---
-    "ARS": {"Home": 1750, "Away": 1950},  # Example: Arsenal (Strong)
+    "ARS": {"Home": 1800, "Away": 1950},  # Example: Arsenal (Strong)
     "AVL": {"Home": 1300, "Away": 1350},  # Example: Aston Villa (Moderate/Weak)
     "BHA": {"Home": 1150, "Away": 1250},
     "BOU": {"Home": 1100, "Away": 1200},
     "BRE": {"Home": 1050, "Away": 1150},
-    "BUR": {"Home": 800, "Away": 850},
+    "BUR": {"Home": 700, "Away": 800},
     "CHE": {"Home": 1450, "Away": 1550},
     "CRY": {"Home": 1100, "Away": 1200},
     "EVE": {"Home": 1000, "Away": 1100},
@@ -182,11 +182,11 @@ CUSTOM_DEFAULTS = {
     "MCI": {"Home": 1500, "Away": 1650},
     "MUN": {"Home": 1150, "Away": 1250},
     "NEW": {"Home": 1200, "Away": 1350},
-    "NFO": {"Home": 950, "Away": 1050},
+    "NFO": {"Home": 900, "Away": 1050},
     "SUN": {"Home": 1150, "Away": 1200},
-    "TOT": {"Home": 1050, "Away": 1150},
+    "TOT": {"Home": 1000, "Away": 1100},
     "WHU": {"Home": 700, "Away": 800},
-    "WOL": {"Home": 550, "Away": 700},
+    "WOL": {"Home": 600, "Away": 700},
     # ...
     # --- END EDITING YOUR CUSTOM DEFAULTS HERE ---
 }
@@ -292,7 +292,7 @@ with st.sidebar:
         "Select GW Range",
         min_value=min_gw,
         max_value=max_gw,
-        value=(22, 26)
+        value=(23, 27)
     )
 
     range_gws = list(range(gw_start, gw_end + 1))

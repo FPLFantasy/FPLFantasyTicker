@@ -169,7 +169,7 @@ CUSTOM_DEFAULTS = {
     # --- START EDITING YOUR CUSTOM DEFAULTS HERE ---
     "ARS": {"Home": 1800, "Away": 1950},  # Example: Arsenal (Strong)
     "AVL": {"Home": 1300, "Away": 1350},  # Example: Aston Villa (Moderate/Weak)
-    "BHA": {"Home": 1150, "Away": 1250},
+    "BHA": {"Home": 1150, "Away": 1200},
     "BOU": {"Home": 1100, "Away": 1200},
     "BRE": {"Home": 1050, "Away": 1150},
     "BUR": {"Home": 700, "Away": 800},
@@ -184,9 +184,9 @@ CUSTOM_DEFAULTS = {
     "NEW": {"Home": 1200, "Away": 1350},
     "NFO": {"Home": 900, "Away": 1050},
     "SUN": {"Home": 1150, "Away": 1250},
-    "TOT": {"Home": 1000, "Away": 1100},
-    "WHU": {"Home": 700, "Away": 800},
-    "WOL": {"Home": 600, "Away": 700},
+    "TOT": {"Home": 950, "Away": 1050},
+    "WHU": {"Home": 750, "Away": 850},
+    "WOL": {"Home": 650, "Away": 700},
     # ...
     # --- END EDITING YOUR CUSTOM DEFAULTS HERE ---
 }
@@ -292,7 +292,7 @@ with st.sidebar:
         "Select GW Range",
         min_value=min_gw,
         max_value=max_gw,
-        value=(23, 27)
+        value=(24, 28)
     )
 
     range_gws = list(range(gw_start, gw_end + 1))

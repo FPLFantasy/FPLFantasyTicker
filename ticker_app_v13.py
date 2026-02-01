@@ -177,7 +177,7 @@ CUSTOM_DEFAULTS = {
     "CRY": {"Home": 1100, "Away": 1150},
     "EVE": {"Home": 1000, "Away": 1100},
     "FUL": {"Home": 1000, "Away": 1150},
-    "LEE": {"Home": 1000, "Away": 1100},  # Example: Arsenal (Strong)
+    "LEE": {"Home": 950, "Away": 1100},  # Example: Arsenal (Strong)
     "LIV": {"Home": 1400, "Away": 1500},  # Example: Aston Villa (Moderate/Weak)
     "MCI": {"Home": 1500, "Away": 1650},
     "MUN": {"Home": 1150, "Away": 1250},
@@ -292,7 +292,7 @@ with st.sidebar:
         "Select GW Range",
         min_value=min_gw,
         max_value=max_gw,
-        value=(24, 28)
+        value=(25, 29)
     )
 
     range_gws = list(range(gw_start, gw_end + 1))

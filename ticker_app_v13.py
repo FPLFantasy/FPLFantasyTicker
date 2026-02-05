@@ -433,7 +433,7 @@ for team in team_codes:
         "Cells": cell_map
     })
 
-stats_df = pd.DataFrame(team_stats).sort_values("Total").reset_index(drop=True)
+stats_df = pd.DataFrame(team_stats).sort_values("Avg").reset_index(drop=True)
 sorted_teams = stats_df["Team"].tolist()
 
 if missing_opponents:

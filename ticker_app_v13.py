@@ -184,7 +184,7 @@ CUSTOM_DEFAULTS = {
     "NEW": {"Home": 1200, "Away": 1350},
     "NFO": {"Home": 900, "Away": 1050},
     "SUN": {"Home": 1150, "Away": 1250},
-    "TOT": {"Home": 950, "Away": 1050},
+    "TOT": {"Home": 850, "Away": 950},
     "WHU": {"Home": 750, "Away": 850},
     "WOL": {"Home": 750, "Away": 850},
     # ...
@@ -292,7 +292,7 @@ with st.sidebar:
         "Select GW Range",
         min_value=min_gw,
         max_value=max_gw,
-        value=(30, 34)
+        value=(31, 35)
     )
 
     range_gws = list(range(gw_start, gw_end + 1))

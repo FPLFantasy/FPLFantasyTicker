@@ -191,7 +191,7 @@ CUSTOM_DEFAULTS = {
     "AVL": {"Home": 1300, "Away": 1350},
     "BHA": {"Home": 1150, "Away": 1200},
     "BOU": {"Home": 1100, "Away": 1200},
-    "BRE": {"Home": 1050, "Away": 1150},
+    "BRE": {"Home": 1100, "Away": 1150},
     "CHE": {"Home": 1450, "Away": 1550},
     "COV": {"Home": 600,  "Away": 700},   # PROMOTED 2026/27 - verify short code
     "CRY": {"Home": 1100, "Away": 1150},
@@ -200,11 +200,11 @@ CUSTOM_DEFAULTS = {
     "HUL": {"Home": 550,  "Away": 650},   # PROMOTED 2026/27 - verify short code
     "IPS": {"Home": 650,  "Away": 750},   # PROMOTED 2026/27 - verify short code
     "LEE": {"Home": 950,  "Away": 1100},
-    "LIV": {"Home": 1400, "Away": 1500},
+    "LIV": {"Home": 1450, "Away": 1550},
     "MCI": {"Home": 1550, "Away": 1700},
     "MUN": {"Home": 1250, "Away": 1350},
     "NEW": {"Home": 1200, "Away": 1350},
-    "NFO": {"Home": 950,  "Away": 1050},
+    "NFO": {"Home": 1050,  "Away": 1100},
     "SUN": {"Home": 1150, "Away": 1250},
     "TOT": {"Home": 1100,  "Away": 1150},
 

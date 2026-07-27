@@ -197,16 +197,16 @@ CUSTOM_DEFAULTS = {
     "CRY": {"Home": 1100, "Away": 1150},
     "EVE": {"Home": 1000, "Away": 1100},
     "FUL": {"Home": 1000, "Away": 1150},
-    "HUL": {"Home": 600,  "Away": 700},   # PROMOTED 2026/27 - verify short code
+    "HUL": {"Home": 550,  "Away": 650},   # PROMOTED 2026/27 - verify short code
     "IPS": {"Home": 650,  "Away": 750},   # PROMOTED 2026/27 - verify short code
     "LEE": {"Home": 950,  "Away": 1100},
     "LIV": {"Home": 1400, "Away": 1500},
     "MCI": {"Home": 1550, "Away": 1700},
-    "MUN": {"Home": 1200, "Away": 1300},
+    "MUN": {"Home": 1250, "Away": 1350},
     "NEW": {"Home": 1200, "Away": 1350},
-    "NFO": {"Home": 900,  "Away": 1050},
+    "NFO": {"Home": 950,  "Away": 1050},
     "SUN": {"Home": 1150, "Away": 1250},
-    "TOT": {"Home": 850,  "Away": 950},
+    "TOT": {"Home": 1100,  "Away": 1150},
 
     # --- Relegated after 2025/26. Kept for reference only; ignored by the app.
     # "BUR": {"Home": 600, "Away": 700},

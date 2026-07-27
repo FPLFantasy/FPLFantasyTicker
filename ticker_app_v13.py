@@ -57,6 +57,7 @@ if st.query_params.get("ads") == "txt":
 import pandas as pd
 import numpy as np
 import requests
+import matplotlib
 from matplotlib import cm, colors
 from typing import Tuple, Dict, List
 from streamlit_local_storage import LocalStorage
@@ -65,7 +66,13 @@ from streamlit_local_storage import LocalStorage
 # 5) Initialize local storage
 # --------------------------------------------
 localS = LocalStorage()
-LOCAL_KEY = "saved_difficulties_v13"
+
+# FIX 3: bump this key ONCE PER SEASON.
+# Returning visitors keep whatever they saved in their browser forever, which
+# means they would never see your updated code defaults. Changing the key
+# resets everyone onto the new season's defaults. Anyone who then edits the
+# table/sliders gets their own saved copy again, exactly as before.
+LOCAL_KEY = "saved_difficulties_2026_27_v1"
 
 # ---------------------
 # API endpoints
@@ -162,32 +169,49 @@ if df.empty or len(team_codes) == 0 or not teams_full:
 
 # ---------------------
 # Defaults (CUSTOMIZABLE)
-# NOTE: Edit CUSTOM_DEFAULTS below to set the initial difficulties for each team.
-# Keys must be the FPL short codes (e.g., 'ARS', 'AVL').
+#
+# >>> THIS IS THE ONLY BLOCK YOU NEED TO TOUCH WEEKLY <<<
+#
+# Keys must be the FPL short codes exactly as the API returns them
+# (e.g. 'ARS', 'AVL'). Scale runs 500 - 2000.
+#   HIGHER number = HARDER opponent (red in the grid)
+#   LOWER  number = EASIER opponent (green in the grid)
+#
+#   "Home" = difficulty of facing this team AT THEIR PLACE... i.e. the value
+#            used when YOUR team is at home to them.
+#   "Away" = the value used when YOUR team travels to them.
+#
+# Any key in here that is NOT a current Premier League team is silently
+# ignored (safe to leave), and any current team MISSING from here falls back
+# to the generic values below. The sidebar check further down tells you which.
 # ---------------------
 CUSTOM_DEFAULTS = {
     # --- START EDITING YOUR CUSTOM DEFAULTS HERE ---
-    "ARS": {"Home": 1850, "Away": 1975},  # Example: Arsenal (Strong)
-    "AVL": {"Home": 1300, "Away": 1350},  # Example: Aston Villa (Moderate/Weak)
+    "ARS": {"Home": 1850, "Away": 1975},
+    "AVL": {"Home": 1300, "Away": 1350},
     "BHA": {"Home": 1150, "Away": 1200},
     "BOU": {"Home": 1100, "Away": 1200},
     "BRE": {"Home": 1050, "Away": 1150},
-    "BUR": {"Home": 600, "Away": 700},
     "CHE": {"Home": 1450, "Away": 1550},
+    "COV": {"Home": 600,  "Away": 700},   # PROMOTED 2026/27 - verify short code
     "CRY": {"Home": 1100, "Away": 1150},
     "EVE": {"Home": 1000, "Away": 1100},
     "FUL": {"Home": 1000, "Away": 1150},
-    "LEE": {"Home": 950, "Away": 1100},  # Example: Arsenal (Strong)
-    "LIV": {"Home": 1400, "Away": 1500},  # Example: Aston Villa (Moderate/Weak)
+    "HUL": {"Home": 600,  "Away": 700},   # PROMOTED 2026/27 - verify short code
+    "IPS": {"Home": 650,  "Away": 750},   # PROMOTED 2026/27 - verify short code
+    "LEE": {"Home": 950,  "Away": 1100},
+    "LIV": {"Home": 1400, "Away": 1500},
     "MCI": {"Home": 1550, "Away": 1700},
     "MUN": {"Home": 1200, "Away": 1300},
     "NEW": {"Home": 1200, "Away": 1350},
-    "NFO": {"Home": 900, "Away": 1050},
+    "NFO": {"Home": 900,  "Away": 1050},
     "SUN": {"Home": 1150, "Away": 1250},
-    "TOT": {"Home": 850, "Away": 950},
-    "WHU": {"Home": 750, "Away": 850},
-    "WOL": {"Home": 750, "Away": 850},
-    # ...
+    "TOT": {"Home": 850,  "Away": 950},
+
+    # --- Relegated after 2025/26. Kept for reference only; ignored by the app.
+    # "BUR": {"Home": 600, "Away": 700},
+    # "WHU": {"Home": 750, "Away": 850},
+    # "WOL": {"Home": 750, "Away": 850},
     # --- END EDITING YOUR CUSTOM DEFAULTS HERE ---
 }
 
@@ -204,6 +228,27 @@ for t in team_codes:
     else:
         # Use the generic fallback for any team you didn't specify
         DEFAULT_VALUES[t] = {"Home": GENERIC_HOME_DEFAULT, "Away": GENERIC_AWAY_DEFAULT}
+
+# ---------------------
+# FIX 2: sanity check so a wrong/stale short code can never fail silently again.
+# Purely informational - it renders in the sidebar and changes no data.
+# ---------------------
+_unknown_codes = sorted(set(CUSTOM_DEFAULTS.keys()) - set(team_codes))
+_missing_codes = sorted(set(team_codes) - set(CUSTOM_DEFAULTS.keys()))
+if _missing_codes or _unknown_codes:
+    with st.sidebar:
+        if _missing_codes:
+            st.warning(
+                "⚠️ Using generic defaults ("
+                f"{GENERIC_HOME_DEFAULT}/{GENERIC_AWAY_DEFAULT}) for: "
+                + ", ".join(_missing_codes)
+                + " — add these exact codes to CUSTOM_DEFAULTS."
+            )
+        if _unknown_codes:
+            st.caption(
+                "Ignored (not in the Premier League this season): "
+                + ", ".join(_unknown_codes)
+            )
 
 # ---------------------
 # Local-storage based persistence helpers (replace disk IO)
@@ -265,17 +310,24 @@ if "difficulties" not in st.session_state:
         st.session_state["difficulties"] = pd.DataFrame({
             "Team": team_codes,
             # Use the values from the DEFAULT_VALUES dictionary constructed above
-            "Home": [DEFAULT_VALUES.get(t, {}).get("Home", 1250) for t in team_codes],
-            "Away": [DEFAULT_VALUES.get(t, {}).get("Away", 1350) for t in team_codes],
+            "Home": [DEFAULT_VALUES.get(t, {}).get("Home", GENERIC_HOME_DEFAULT) for t in team_codes],
+            "Away": [DEFAULT_VALUES.get(t, {}).get("Away", GENERIC_AWAY_DEFAULT) for t in team_codes],
         }).set_index("Team")
 
 def ensure_difficulties_cover_teams():
     df_cur = st.session_state["difficulties"]
+    # Guard: make sure both columns exist before we assign into them.
+    for col, gen in (("Home", GENERIC_HOME_DEFAULT), ("Away", GENERIC_AWAY_DEFAULT)):
+        if col not in df_cur.columns:
+            df_cur[col] = gen
     for t in team_codes:
         if t not in df_cur.index:
-            # Use the values from the DEFAULT_VALUES dictionary constructed above
-            df_cur.loc[t] = [DEFAULT_VALUES.get(t, {}).get("Home", 1250),
-                             DEFAULT_VALUES.get(t, {}).get("Away", 1350)]
+            # FIX: assign by COLUMN NAME rather than positionally. The old
+            # `df_cur.loc[t] = [h, a]` silently swapped Home/Away if a saved
+            # payload ever came back with the columns in a different order.
+            df_cur.loc[t, "Home"] = DEFAULT_VALUES.get(t, {}).get("Home", GENERIC_HOME_DEFAULT)
+            df_cur.loc[t, "Away"] = DEFAULT_VALUES.get(t, {}).get("Away", GENERIC_AWAY_DEFAULT)
+    # reindex drops any team that is no longer in the Premier League
     st.session_state["difficulties"] = df_cur.reindex(team_codes)
 
 ensure_difficulties_cover_teams()
@@ -288,11 +340,18 @@ with st.sidebar:
         min_gw, max_gw = int(df["GW"].min()), int(df["GW"].max())
     else:
         min_gw, max_gw = 1, 38
+
+    # FIX: the old hard-coded value=(34, 38) was a run-in default and would
+    # raise if the API ever returned fewer than 38 gameweeks. Clamped to the
+    # actual available range, defaulting to the next 5 GWs from the start.
+    default_start = min_gw
+    default_end = min(max_gw, default_start + 4)
+
     gw_start, gw_end = st.slider(
         "Select GW Range",
         min_value=min_gw,
         max_value=max_gw,
-        value=(34, 38)
+        value=(default_start, default_end)
     )
 
     range_gws = list(range(gw_start, gw_end + 1))
@@ -307,7 +366,7 @@ with st.sidebar:
 
     st.markdown("---")
     st.header("Controls")
-    st.write("We update the **default** difficultiese every GW")
+    st.write("We update the **default** difficulties every GW")
     st.write("**Edit difficulties (In the table or sliders below).**")
     st.write("- **Home** = Difficulty of opponent visiting you (you're HOME)  \n- **Away** = Difficulty when you travel (you're AWAY)")
 
@@ -325,26 +384,47 @@ with st.sidebar:
     with st.expander("Difficulty Sliders (Adjust & Apply)"):
         st.markdown("Use sliders to visually adjust Home/Away. Click **Apply sliders** to commit changes.")
 
+        SLIDER_MIN, SLIDER_MAX = 500, 2000
+
+        def _clamp(v, fallback):
+            """Keep seeded slider values inside the widget's own min/max,
+            otherwise Streamlit raises when the widget is created."""
+            try:
+                v = int(float(v))
+            except Exception:
+                v = int(fallback)
+            return max(SLIDER_MIN, min(SLIDER_MAX, v))
+
         for t in team_codes:
             kh = f"slider_home_{t}"
             ka = f"slider_away_{t}"
             if kh not in st.session_state:
                 try:
-                    st.session_state[kh] = int(st.session_state["difficulties"].loc[t, "Home"])
+                    st.session_state[kh] = _clamp(
+                        st.session_state["difficulties"].loc[t, "Home"],
+                        DEFAULT_VALUES[t]["Home"]
+                    )
                 except Exception:
-                    st.session_state[kh] = DEFAULT_VALUES[t]["Home"]
+                    st.session_state[kh] = _clamp(DEFAULT_VALUES[t]["Home"], GENERIC_HOME_DEFAULT)
             if ka not in st.session_state:
                 try:
-                    st.session_state[ka] = int(st.session_state["difficulties"].loc[t, "Away"])
+                    st.session_state[ka] = _clamp(
+                        st.session_state["difficulties"].loc[t, "Away"],
+                        DEFAULT_VALUES[t]["Away"]
+                    )
                 except Exception:
-                    st.session_state[ka] = DEFAULT_VALUES[t]["Away"]
+                    st.session_state[ka] = _clamp(DEFAULT_VALUES[t]["Away"], GENERIC_AWAY_DEFAULT)
 
         for t in team_codes:
             c1, c2 = st.columns([1,1])
             with c1:
-                st.slider(f"{t} Home", min_value=500, max_value=2000, value=st.session_state[f"slider_home_{t}"], key=f"slider_home_{t}")
+                # FIX: no `value=` here. Passing both value= and key= when the
+                # key already exists in session_state triggers a Streamlit
+                # warning and the value= is ignored anyway. The seeding loop
+                # above is what sets the starting position.
+                st.slider(f"{t} Home", min_value=SLIDER_MIN, max_value=SLIDER_MAX, key=f"slider_home_{t}")
             with c2:
-                st.slider(f"{t} Away", min_value=500, max_value=2000, value=st.session_state[f"slider_away_{t}"], key=f"slider_away_{t}")
+                st.slider(f"{t} Away", min_value=SLIDER_MIN, max_value=SLIDER_MAX, key=f"slider_away_{t}")
 
         if st.button("Apply sliders (save & apply)"):
             with st.spinner("Applying sliders and saving..."):
@@ -523,7 +603,14 @@ with col_left:
 
 with col_right:
     st.subheader(f"Fixture Grid (GW{gw_start} → GW{gw_end}) — excluded GW is greyed")
-    cmap = cm.get_cmap("RdYlGn_r")
+
+    # FIX: cm.get_cmap() was removed in matplotlib 3.9. This works on both old
+    # and new versions, so a future dependency re-resolve can't crash the grid.
+    try:
+        cmap = matplotlib.colormaps["RdYlGn_r"]
+    except Exception:
+        cmap = cm.get_cmap("RdYlGn_r")
+
     try:
         vmin = np.nanmin(grid_vals.values)
         vmax = np.nanmax(grid_vals.values)

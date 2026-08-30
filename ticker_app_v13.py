@@ -188,25 +188,25 @@ if df.empty or len(team_codes) == 0 or not teams_full:
 CUSTOM_DEFAULTS = {
     # --- START EDITING YOUR CUSTOM DEFAULTS HERE ---
     "ARS": {"Home": 1850, "Away": 1975},
-    "AVL": {"Home": 1300, "Away": 1350},
+    "AVL": {"Home": 1175, "Away": 1225},
     "BHA": {"Home": 1150, "Away": 1200},
     "BOU": {"Home": 1100, "Away": 1200},
     "BRE": {"Home": 1100, "Away": 1150},
     "CHE": {"Home": 1450, "Away": 1550},
-    "COV": {"Home": 600,  "Away": 700},   # PROMOTED 2026/27 - verify short code
+    "COV": {"Home": 525,  "Away": 625},   # PROMOTED 2026/27 - verify short code
     "CRY": {"Home": 1100, "Away": 1150},
     "EVE": {"Home": 1000, "Away": 1100},
     "FUL": {"Home": 1000, "Away": 1150},
-    "HUL": {"Home": 550,  "Away": 650},   # PROMOTED 2026/27 - verify short code
-    "IPS": {"Home": 650,  "Away": 750},   # PROMOTED 2026/27 - verify short code
-    "LEE": {"Home": 950,  "Away": 1100},
+    "HUL": {"Home": 600,  "Away": 675},   # PROMOTED 2026/27 - verify short code
+    "IPS": {"Home": 600,  "Away": 700},   # PROMOTED 2026/27 - verify short code
+    "LEE": {"Home": 1000,  "Away": 1100},
     "LIV": {"Home": 1450, "Away": 1550},
-    "MCI": {"Home": 1550, "Away": 1700},
-    "MUN": {"Home": 1250, "Away": 1350},
-    "NEW": {"Home": 1200, "Away": 1350},
+    "MCI": {"Home": 1600, "Away": 1700},
+    "MUN": {"Home": 1275, "Away": 1350},
+    "NEW": {"Home": 1225, "Away": 1325},
     "NFO": {"Home": 1050,  "Away": 1100},
-    "SUN": {"Home": 1150, "Away": 1250},
-    "TOT": {"Home": 1100,  "Away": 1150},
+    "SUN": {"Home": 1125, "Away": 1200},
+    "TOT": {"Home": 1075,  "Away": 1150},
 
     # --- Relegated after 2025/26. Kept for reference only; ignored by the app.
     # "BUR": {"Home": 600, "Away": 700},
